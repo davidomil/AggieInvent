@@ -13,18 +13,21 @@ class DoorSerial(threading.Thread):
         """
         Builds message to send over RS232
         Packet structure:
-        |----------|----------------------------------|--------------|
-        |  HEADER  |             DATA                 |Data Check Sum|
-        |----------|----------------------------------|--------------|
+        |----------|----------------------------------|----------------|
+        |  HEADER  |             DATA *               |Data Check Sum *|
+        |----------|----------------------------------|----------------|
              24                Data Size                       4
         ^          ^
         |             \
         |                \
         |     Packet HEADER  \
         |------------|---------|---------|---------|-----------|------------|------------------|
-        |Start Byte  | Command | Param 1 | Param 2 | Data Size | Error Code | Header Check Sum |
+        |Start Byte *| Command | Param 1 | Param 2 | Data Size | Error Code | Header Check Sum |
         |------------|---------|---------|---------|-----------|------------|------------------|
               1           4          4        4          4            4              4
+
+        * If data size is zero, then data and data check sum is not used
+        * Start byte: 0x7E
 
         :param command: Command to send
         :param param1: Command 1st param
