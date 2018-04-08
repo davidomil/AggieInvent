@@ -2,8 +2,10 @@ import functools
 import time
 from flask import Flask, jsonify, Response
 
-app = Flask(__name__)
+from Serial import DoorSerial
 
+app = Flask(__name__)
+serial_controller = DoorSerial()
 
 def returns_content_type(mime_type):
     def decorator(f):
@@ -41,7 +43,7 @@ def system_status():
 @returns_content_type('text/plain')
 # @require_basic_auth
 def door_unlock(doorid):
-    #TODO: Unlock door
+    serial_controller.add_command('UL')
 
 
     return ('Door is now unlocked', 200)
@@ -51,10 +53,29 @@ def door_unlock(doorid):
 @returns_content_type('text/plain')
 # @require_basic_auth
 def door_lock(doorid):
-    #TODO: lock door
-
+    serial_controller.add_command('LO')
 
     return ('Door is now locked', 200)
 
+
+@app.route('/doors/<doorid>/open', methods=['POST'])
+@returns_content_type('text/plain')
+# @require_basic_auth
+def door_open(doorid):
+    serial_controller.add_command('OP')
+
+    return ('Door is now opened', 200)
+
+
+@app.route('/doors/<doorid>/close', methods=['POST'])
+@returns_content_type('text/plain')
+# @require_basic_auth
+def door_close(doorid):
+    serial_controller.add_command('CL')
+
+    return ('Door is now opened', 200)
+
+
 if __name__ == '__main__':
+    serial_controller.start()
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=False)
