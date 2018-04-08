@@ -9,7 +9,7 @@ class DoorSerial(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.ser = serial.Serial('/dev/ttyAMA0', baudrate=9600,
+        self.ser = serial.Serial('/dev/ttyACM0', baudrate=9600,
                                  parity=serial.PARITY_NONE,
                                  stopbits=serial.STOPBITS_ONE,
                                  bytesize=serial.EIGHTBITS
@@ -19,11 +19,14 @@ class DoorSerial(threading.Thread):
     def run(self):
 
         while True:
-            if len(self.commands) is 0:
-                DoorSerial.event.wait()
-            DoorSerial.event.clear()
+            # if len(self.commands) is 0:
+            #     DoorSerial.event.wait()
+            # DoorSerial.event.clear()
             if len(self.commands) > 0:
-                self.ser.write(self.build_message(self.commands.pop(0)))
+                tmp0 = self.commands.pop(0)
+                tmp1 = self.build_message(tmp0)
+                for el in tmp1:
+                    self.ser.write(el)
 
     def add_command(self, command):
         self.commands.append(command)

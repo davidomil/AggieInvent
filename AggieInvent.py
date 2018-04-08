@@ -7,6 +7,7 @@ from Serial import DoorSerial
 app = Flask(__name__)
 serial_controller = DoorSerial()
 
+
 def returns_content_type(mime_type):
     def decorator(f):
         @functools.wraps(f)
@@ -39,7 +40,7 @@ def system_status():
 
 
 ## Door functionality
-@app.route('/doors/<doorid>/unlock', methods=['POST'])
+@app.route('/doors/<doorid>/unlock', methods=['POST','GET'])
 @returns_content_type('text/plain')
 # @require_basic_auth
 def door_unlock(doorid):
@@ -49,7 +50,7 @@ def door_unlock(doorid):
     return ('Door is now unlocked', 200)
 
 
-@app.route('/doors/<doorid>/lock', methods=['POST'])
+@app.route('/doors/<doorid>/lock', methods=['POST','GET'])
 @returns_content_type('text/plain')
 # @require_basic_auth
 def door_lock(doorid):
@@ -58,7 +59,7 @@ def door_lock(doorid):
     return ('Door is now locked', 200)
 
 
-@app.route('/doors/<doorid>/open', methods=['POST'])
+@app.route('/doors/<doorid>/open', methods=['POST','GET'])
 @returns_content_type('text/plain')
 # @require_basic_auth
 def door_open(doorid):
@@ -67,7 +68,7 @@ def door_open(doorid):
     return ('Door is now opened', 200)
 
 
-@app.route('/doors/<doorid>/close', methods=['POST'])
+@app.route('/doors/<doorid>/close', methods=['POST','GET'])
 @returns_content_type('text/plain')
 # @require_basic_auth
 def door_close(doorid):
